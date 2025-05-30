@@ -33,6 +33,25 @@ def find_can():
 
     return port_matches
 
+def activate_can(port, name="can0", bitrate=1000000):
+    print(f"Activating CAN device: {port}")
+
+    # Get the path to the script
+    script_path = os.path.join(os.path.dirname(__file__), "scripts", "can_activate.sh")
+
+    # Run the script with sudo
+    # e.g bash can_activate.sh can_piper 1000000 "1-2:1.0"
+    result = subprocess.run(['sudo', 'bash', script_path, name, str(bitrate), port], capture_output=True, text=True)
+    # Print output
+    print("STDOUT:", result.stdout)
+    
+    # if result.stderr is not empty, print it
+    if result.stderr:
+        print("STDERR:", result.stderr)
+        return False
+    else:
+        print("Successfully activated CAN device")
+        return True
 
 if __name__ == "__main__":
     find_can()
