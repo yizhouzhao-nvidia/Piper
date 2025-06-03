@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "atomics>=1.0.3",
+    "numpy>=2.2.6",
     "piper-sdk>=0.2.19",
     "python-can>=4.5.0",
 ]
