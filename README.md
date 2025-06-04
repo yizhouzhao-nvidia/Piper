@@ -14,6 +14,8 @@ sudo apt update && sudo apt install can-utils ethtool
 
 1. Install dependencies
 ```bash
-source piper/bin/activate
+uv venv
+source .venv/bin/activate
 uv pip install -e .
 ```
+
