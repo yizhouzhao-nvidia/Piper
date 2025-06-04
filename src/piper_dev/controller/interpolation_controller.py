@@ -7,14 +7,13 @@ from multiprocessing.managers import SharedMemoryManager
 
 import numpy as np
 
-from grootenv.control_client import BaseClient
-from grootenv.shared_memory.shared_memory_queue import Empty, SharedMemoryQueue
-from grootenv.shared_memory.shared_memory_ring_buffer import SharedMemoryRingBuffer
-from grootenv.utils.pose_trajectory_interpolator import PoseTrajectoryInterpolator
-from grootenv.utils.precise_sleep import precise_wait
+from piper_dev.control_client import BaseClient
+from piper_dev.shared_memory.shared_memory_queue import Empty, SharedMemoryQueue
+from piper_dev.shared_memory.shared_memory_ring_buffer import SharedMemoryRingBuffer
+from piper_dev.utils.pose_trajectory_interpolator import PoseTrajectoryInterpolator
+from piper_dev.utils.precise_sleep import precise_wait
 
 from .base_controller import BaseController
-
 
 class Command(enum.Enum):
     STOP = 0

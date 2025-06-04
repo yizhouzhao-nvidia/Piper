@@ -9,6 +9,7 @@ dependencies = [
     "numpy>=2.2.6",
     "piper-sdk>=0.2.19",
     "python-can>=4.5.0",
+    "scipy>=1.15.3",
 ]
 
 [project.optional-dependencies]

@@ -178,3 +178,50 @@ class PoseTrajectoryInterpolator:
         if is_single:
             pose = pose[0]
         return pose
+    
+
+if __name__ == "__main__":
+    # Create a simple trajectory with 3 waypoints
+    times = np.array([0.0, 1.0, 2.0])
+    # Each pose has 3 joints (for example)
+    poses = np.array([
+        [0.0, 0.0, 0.0],  # Initial pose
+        [1.0, 0.5, 0.3],  # Middle pose
+        [2.0, 1.0, 0.6]   # Final pose
+    ])
+
+    # Create the interpolator
+    interpolator = PoseTrajectoryInterpolator(times, poses)
+
+    # Test basic interpolation
+    print("Testing basic interpolation:")
+    test_times = np.array([0.0, 0.5, 1.0, 1.5, 2.0])
+    interpolated_poses = interpolator(test_times)
+    for t, pose in zip(test_times, interpolated_poses):
+        print(f"Time {t:.1f}: {pose}")
+
+    # Test trimming
+    print("\nTesting trimming:")
+    trimmed = interpolator.trim(0.5, 1.5)
+    print(f"Trimmed times: {trimmed.times}")
+    print(f"Trimmed poses: {trimmed.poses}")
+
+    # Test driving to a new waypoint
+    print("\nTesting drive_to_waypoint:")
+    new_pose = np.array([3.0, 1.5, 0.9])
+    new_time = 3.0
+    curr_time = 1.0
+    max_speed = 1.0  # Maximum speed for each joint
+    new_trajectory = interpolator.drive_to_waypoint(
+        new_pose, new_time, curr_time, max_speed
+    )
+    print(f"New trajectory times: {new_trajectory.times}")
+    print(f"New trajectory poses: {new_trajectory.poses}")
+
+    # Test scheduling a waypoint
+    print("\nTesting schedule_waypoint:")
+    scheduled = interpolator.schedule_waypoint(
+        new_pose, new_time, max_speed, curr_time
+    )
+    print(f"Scheduled trajectory times: {scheduled.times}")
+    print(f"Scheduled trajectory poses: {scheduled.poses}")
