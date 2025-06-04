@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 import time
+import numpy as np
 
 from piper_sdk import C_PiperInterface_V2  
 
@@ -54,6 +55,7 @@ def enable_fun(piper:C_PiperInterface_V2, enable:bool):
     print(f"Returning response: {resp}")
     return resp
 
+
 class PiperClient(BaseClient):
     def __init__(self,
                  port: str = "can0"):
@@ -80,11 +82,12 @@ class PiperClient(BaseClient):
                 else:
                     raise Exception("Failed to enable Piper")
                 
-                self.piper.MotionCtrl_1(0x00, 0x02, 0x01)
-                # self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
-                # self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
-                # self.piper.GripperCtrl(0, 1000,0x01, 0) 
-                # #self.piper.GripperCtrl(round(0.08 * 1e6), 1000, 0x01, 0)
+                # Go to Zero Position             
+                
+                self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
+                self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
+                self.piper.GripperCtrl(0, 1000,0x01, 0) 
+                #self.piper.GripperCtrl(round(0.08 * 1e6), 1000, 0x01, 0)
                 
             else:
                 raise Exception("Failed to connect to Piper")
@@ -94,14 +97,57 @@ class PiperClient(BaseClient):
             print(f"Error: {e}")
         
         finally:
-            if self.piper:
+            if self.piper:    
+                # time.sleep(2)
+                self.piper.MotionCtrl_1(0x01,0,0) # stop
+                for i in range(5):
+                    print(f"[Info] Stopping Piper....count down {5-i} ...")
+                    time.sleep(1)
                 
-                # self.piper.MotionCtrl_1(0x00, 0x00, 0x02)
+                self.piper.MotionCtrl_1(0x02, 0x00, 0x00) # reset
+                print("[Info] Resetting Piper....")
                 
                 flag = enable_fun(piper=self.piper, enable=False)
                 if(flag == True):
                     print("失能成功!!!!")
-                    exit(0)
+
         
                 self.piper.DisconnectPort()
                 self.piper = None
+                
+    @property
+    def cmd_shape(self):
+        return (6 + 1, )
+
+    @property
+    def state_shape(self):
+        return (6 + 1, ) 
+    
+    def move(self, cmds: np.ndarray):
+        factor = 57295.7795 #1000*180/3.1415926
+        joint_0 = round(cmds[0]*factor)
+        joint_1 = round(cmds[1]*factor)
+        joint_2 = round(cmds[2]*factor)
+        joint_3 = round(cmds[3]*factor)
+        joint_4 = round(cmds[4]*factor)
+        joint_5 = round(cmds[5]*factor)
+        joint_6 = round(cmds[6]*1000*1000)
+        
+        self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)
+        self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
+        
+    def get(self):
+        arm_joint_msg = self.piper.GetArmJointMsgs()
+        gripper_msg = self.piper.GetArmGripperMsgs()
+        arm_joint_state = [np.deg2rad(arm_joint_msg.joint_state.joint_1 * 0.001), 
+                           np.deg2rad(arm_joint_msg.joint_state.joint_2 * 0.001), 
+                           np.deg2rad(arm_joint_msg.joint_state.joint_3 * 0.001), 
+                           np.deg2rad(arm_joint_msg.joint_state.joint_4 * 0.001), 
+                           np.deg2rad(arm_joint_msg.joint_state.joint_5 * 0.001), 
+                           np.deg2rad(arm_joint_msg.joint_state.joint_6 * 0.001)] + \
+                         [gripper_msg.gripper_state.grippers_angle * 0.001] # in mm   
+                         
+        return np.array(arm_joint_state)
+        
+        
+        
