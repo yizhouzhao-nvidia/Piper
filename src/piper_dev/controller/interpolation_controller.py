@@ -174,14 +174,11 @@ class InterpolationController(mp.Process, BaseController):
                 
                 self.control_client.move(pose_command)
 
-                import ipdb; ipdb.set_trace()
-                print("---------------------1----------->")
                 state = {
                     'state': self.control_client.get(),
                     'timestamp': time.time(),
                 }
 
-                print("---------------------2----------->")
                 self.output_ring_buffer.put(state)
 
                 # fetch command from queue
@@ -196,7 +193,6 @@ class InterpolationController(mp.Process, BaseController):
                 except Empty:
                     n_cmd = 0
 
-                print("---------------------3----------->")
                 # execute commands
                 for i in range(n_cmd):
                     command = dict()

@@ -62,6 +62,16 @@ class PiperClient(BaseClient):
         super().__init__()
         self.port = port
         self.piper = None
+        
+        self.joint_limit_rad = np.array([
+            [-2.618, 2.618],
+            [0, 3.14],
+            [-2.967, 0],
+            [-1.745, 1.745],
+            [-1.22, 1.22],
+            [-2.0944, 2.0944],
+            [0, 100],
+        ])
 
 
     @contextmanager
@@ -125,6 +135,18 @@ class PiperClient(BaseClient):
         return (6 + 1, ) 
     
     def move(self, cmds: np.ndarray):
+        # clip the cmds according to the joint limit:
+        #         |joint_name|     limit(rad)     |    limit(angle)    |
+        # |----------|     ----------     |     ----------     |
+        # |joint1    |   [-2.618, 2.618]  |    [-150.0, 150.0] |
+        # |joint2    |   [0, 3.14]        |    [0, 180.0]      |
+        # |joint3    |   [-2.967, 0]      |    [-170, 0]       |
+        # |joint4    |   [-1.745, 1.745]  |    [-100.0, 100.0] |
+        # |joint5    |   [-1.22, 1.22]    |    [-70.0, 70.0]   |
+        # |joint6    |   [-2.0944, 2.0944]|    [-120.0, 120.0] |    
+        
+        cmds = np.clip(cmds, self.joint_limit_rad[:, 0], self.joint_limit_rad[:, 1])
+        
         factor = 57295.7795 #1000*180/3.1415926
         joint_0 = round(cmds[0]*factor)
         joint_1 = round(cmds[1]*factor)
@@ -133,6 +155,7 @@ class PiperClient(BaseClient):
         joint_4 = round(cmds[4]*factor)
         joint_5 = round(cmds[5]*factor)
         joint_6 = round(cmds[6]*1000)
+        
         
         self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
         self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)

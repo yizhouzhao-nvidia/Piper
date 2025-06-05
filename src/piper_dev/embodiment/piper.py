@@ -2,6 +2,7 @@ from piper_dev.controller import BaseController
 from typing import Optional, Callable, Dict, List, Union
 from contextlib import contextmanager
 import numpy as np
+import time
 
 class Piper:
     def __init__(self,
@@ -23,11 +24,15 @@ class Piper:
 
         self.piper_controller.schedule_waypoint(np.array(target_pose), target_time)
         
+    def go_to_zero_pose(self):
+        self.piper_controller.schedule_waypoint(np.zeros(7), 3.0 + time.time())
+        
     @contextmanager
     def activate(self):
         try:
             piper_controller = self.piper_controller if self.piper_controller is not None else BaseController()
             with piper_controller.activate():
+                self.go_to_zero_pose()
                 yield self
         finally:
             print("[Embodiment] piper finished")
