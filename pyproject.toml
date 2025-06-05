@@ -8,6 +8,7 @@ dependencies = [
     "atomics>=1.0.3",
     "numpy>=2.2.6",
     "piper-sdk>=0.2.19",
+    "pynput>=1.8.1",
     "python-can>=4.5.0",
     "scipy>=1.15.3",
 ]

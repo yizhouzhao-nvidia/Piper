@@ -201,13 +201,17 @@ class SharedMemoryQueue:
             callback=lambda: self.read_counter.add(1),
             data=data)
 
-    def get_k(self, k, out=None) -> Dict[str, np.ndarray]:
+    def get_k(self, k, exact=True, out=None) -> Dict[str, np.ndarray]:
         write_count = self.write_counter.load()
         read_count = self.read_counter.load()
         n_data = write_count - read_count
         if n_data <= 0:
             raise Empty()
-        assert k <= n_data
+        
+        if exact:
+            assert k <= n_data
+        else:
+            k = min(k, n_data)
 
         out = self._get_k_impl(k, read_count, out=out)
         self.read_counter.add(k)

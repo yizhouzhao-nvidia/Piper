@@ -67,6 +67,9 @@ class InterpolationController(mp.Process, BaseController):
         )
 
         self.ready_event = mp.Event()
+        
+        if self.verbose:
+            print(f"[InterpolationController] Controller initialized")
 
     # ========= launch method ===========
     def start(self, wait=True):
@@ -131,6 +134,8 @@ class InterpolationController(mp.Process, BaseController):
 
     # ========= main loop in process ============
     def run(self):
+        if self.verbose:
+            print(f"[InterpolationController] Running")
         # enable soft real-time
         if self.soft_real_time:
             os.sched_setscheduler(
@@ -141,6 +146,11 @@ class InterpolationController(mp.Process, BaseController):
             # main loop
             dt = 1. / self.frequency
             curr_pose = self.control_client.get()
+            
+            if self.verbose:
+                print(f"[InterpolationController] Control client activated")
+                print(f"[InterpolationController] Current pose: {curr_pose}")
+                            
             # use monotonic time to make sure the control loop never go backward
             curr_t = time.monotonic()
             last_waypoint_time = curr_t
@@ -152,19 +162,26 @@ class InterpolationController(mp.Process, BaseController):
             t_start = time.monotonic()
             iter_idx = 0
             keep_running = True
+            
             while keep_running:
                 # send command to robot
                 t_now = time.monotonic()
 
                 pose_command = pose_interp(t_now)
+                
+                if self.verbose:
+                    print(f"[InterpolationController] Pose command: {pose_command}")
+                
                 self.control_client.move(pose_command)
-                # if len(pose_command) < 15:
-                #     print(pose_command, time.monotonic() - t_start)
+
+                import ipdb; ipdb.set_trace()
+                print("---------------------1----------->")
                 state = {
                     'state': self.control_client.get(),
                     'timestamp': time.time(),
                 }
 
+                print("---------------------2----------->")
                 self.output_ring_buffer.put(state)
 
                 # fetch command from queue
@@ -179,6 +196,7 @@ class InterpolationController(mp.Process, BaseController):
                 except Empty:
                     n_cmd = 0
 
+                print("---------------------3----------->")
                 # execute commands
                 for i in range(n_cmd):
                     command = dict()

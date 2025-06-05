@@ -84,9 +84,10 @@ class PiperClient(BaseClient):
                 
                 # Go to Zero Position             
                 
-                self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
-                self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
-                self.piper.GripperCtrl(0, 1000,0x01, 0) 
+                # self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
+                # self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
+                # self.piper.GripperCtrl(0, 1000,0x01, 0) 
+                
                 #self.piper.GripperCtrl(round(0.08 * 1e6), 1000, 0x01, 0)
                 
             else:
@@ -94,7 +95,7 @@ class PiperClient(BaseClient):
             yield self.piper
         
         except Exception as e:
-            print(f"Error: {e}")
+            print(f"[Client] Error: {e}")
         
         finally:
             if self.piper:    
@@ -131,8 +132,9 @@ class PiperClient(BaseClient):
         joint_3 = round(cmds[3]*factor)
         joint_4 = round(cmds[4]*factor)
         joint_5 = round(cmds[5]*factor)
-        joint_6 = round(cmds[6]*1000*1000)
+        joint_6 = round(cmds[6]*1000)
         
+        self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
         self.piper.JointCtrl(joint_0, joint_1, joint_2, joint_3, joint_4, joint_5)
         self.piper.GripperCtrl(abs(joint_6), 1000, 0x01, 0)
         

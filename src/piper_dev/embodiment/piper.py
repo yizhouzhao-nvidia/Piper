@@ -1,15 +1,34 @@
 from piper_dev.controller import BaseController
-from typing import Optional, Callable, Dict
+from typing import Optional, Callable, Dict, List, Union
+from contextlib import contextmanager
+import numpy as np
 
-class PiperRobot:
+class Piper:
     def __init__(self,
-                 arm_controller: Optional[BaseController] = None,
-                 gripper_controller: Optional[BaseController] = None,
+                 piper_controller: Optional[BaseController] = None,
                  no_real: bool = False,
                  ):
-        self.arm_controller = arm_controller
-        self.gripper_controller = gripper_controller
+        self.piper_controller = piper_controller
         self.no_real = no_real
 
     def set_no_real(self):
         self.no_real = True
+
+    def act(self, action: Dict[str, Union[np.ndarray, List[float], float]]):
+        if self.no_real:
+            return
+        
+        target_pose = action['target_pose']
+        target_time = action['target_time']
+
+        self.piper_controller.schedule_waypoint(np.array(target_pose), target_time)
+        
+    @contextmanager
+    def activate(self):
+        try:
+            piper_controller = self.piper_controller if self.piper_controller is not None else BaseController()
+            with piper_controller.activate():
+                yield self
+        finally:
+            print("[Embodiment] piper finished")
+            self.piper_controller = None
