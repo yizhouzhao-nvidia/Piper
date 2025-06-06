@@ -7,7 +7,9 @@ requires-python = ">=3.10"
 dependencies = [
     "atomics>=1.0.3",
     "click>=8.2.1",
+    "meshcat>=0.3.2",
     "numpy>=2.2.6",
+    "pin-pink>=3.3.0",
     "piper-sdk>=0.2.19",
     "pynput>=1.8.1",
     "python-can>=4.5.0",
