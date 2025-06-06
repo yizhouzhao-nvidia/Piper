@@ -4,7 +4,7 @@
 
 1. [astral uv](https://docs.astral.sh/uv/getting-started/installation/)
 
-2. install can tool
+2. [For Real Robot] install can tool
 
 ```bash
 sudo apt update && sudo apt install can-utils ethtool
