@@ -29,12 +29,12 @@ class MouseReader:
         if self.initial_x is None or self.initial_y is None:
             self.initial_x, self.initial_y = x , y  # Set initial position
         
-        self.x, self.y = (x - self.initial_x) / 1000.0, (y - self.initial_y) / 1000.0
+        self.x, self.y = (x - self.initial_x) / 500.0, (y - self.initial_y) / 500.0
         # print(f"Mouse delta: ({self.x}, {self.y})")
 
     def on_scroll(self, x, y, dx, dy):
         """Track delta scroll (Z-axis)."""
-        self.z += dy / 20  # Scroll up/down maps to Z-axis
+        self.z += dy / 10  # Scroll up/down maps to Z-axis
         # print(f"Scroll delta: Z={self.z}")
 
     def on_click(self, x, y, button, pressed):

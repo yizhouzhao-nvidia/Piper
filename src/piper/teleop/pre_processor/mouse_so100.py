@@ -1,25 +1,24 @@
 from .base_preprocessor import PreProcessor
-from pyspacemouse import SpaceNavigator
 from scipy.spatial.transform import Rotation as R
 import numpy as np
 
-class MouseSO100PreProcessor(PreProcessor):
-    def __init__(self, move_scale = 0.1, rotate_scale = 50):
+class MousePiperPreProcessor(PreProcessor):
+    def __init__(self, move_scale = 0.1, rotate_scale = 50, ee_name: str = "gripper_base"):
         super().__init__()
         self.pose = None
         self.rotate_scale = rotate_scale
         self.move_scale = move_scale
-        self.ee_name = "Fixed_Jaw"
+        self.ee_name = ee_name
         self.ee_pose = None
 
-    def calibrate(self, data: SpaceNavigator):
+    def calibrate(self):
         """input the current """
         self.ee_pose = self.robot.get_link_transformations([self.ee_name])[0]
 
     def __call__(self, data: np.ndarray | list) -> dict:
         target_pose = np.eye(4)
-        target_pose[0, 3] = self.ee_pose[0, 3] - data[0] * self.move_scale
-        target_pose[1, 3] = self.ee_pose[1, 3] + data[1] * self.move_scale
+        target_pose[0, 3] = self.ee_pose[0, 3] + data[1] * self.move_scale
+        target_pose[1, 3] = self.ee_pose[1, 3] + data[0] * self.move_scale
         target_pose[2, 3] = self.ee_pose[2, 3] + data[2] * self.move_scale
         
         target_pose[:3, :3] = self.ee_pose[:3, :3]

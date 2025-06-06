@@ -2,7 +2,7 @@ from typing import Dict, List, Union
 
 import numpy as np
 
-from lerobotdemo.solvers.basic_solver import Solver
+from piper.teleop.solvers.basic_solver import Solver
 from .articulation import Articulation
 
 
@@ -56,15 +56,18 @@ class Robot(Articulation):
         current_gripper_joint_q = self.get_joint_positions()[-1]
         if self.solver is None:
             raise ValueError("Solver is not initialized.")
-        q = self.solver(target_pose)
-        if gripper_command == "open":
-            q[-1] = np.clip(current_gripper_joint_q + 0.05, 0, np.pi / 2)
-        elif gripper_command == "close":
-            q[-1] = np.clip(current_gripper_joint_q - 0.05, 0, np.pi / 2)
-        else:
-            q[-1] = current_gripper_joint_q
-            
-        self.update(q)
+
+        qt = self.solver(target_pose)
+        # if gripper_command == "open":
+        #     q[-1] = np.clip(current_gripper_joint_q + 0.05, 0, np.pi / 2)
+        # elif gripper_command == "close":
+        #     q[-1] = np.clip(current_gripper_joint_q - 0.05, 0, np.pi / 2)
+        # else:
+        #     q[-1] = current_gripper_joint_q
+        
+
+        # import ipdb; ipdb.set_trace()
+        self.update(qt)
         
         # if include_fixed is True, add the fixed joints to the configuration
         return self.get_joint_positions()

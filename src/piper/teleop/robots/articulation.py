@@ -82,7 +82,7 @@ class Articulation:
             for link_name in link_names
         ]
 
-    def update(self, q, tol=1e-6):
+    def update(self, q, tol=1e-3):
         q = deepcopy(q)
         if self.auto_clip:
             root_nq, _ = get_root_joint_dim(self.configuration.model)

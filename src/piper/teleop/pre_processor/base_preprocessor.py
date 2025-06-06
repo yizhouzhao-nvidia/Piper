@@ -1,6 +1,6 @@
 import abc
 
-from lerobotdemo.robots.robot import Robot
+from ..robots.robot import Robot
 
 class PreProcessor(abc.ABC):
     def __init__(self, **kwargs):

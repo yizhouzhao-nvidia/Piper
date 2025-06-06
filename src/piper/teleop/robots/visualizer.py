@@ -28,7 +28,7 @@ class RobotVisualizer:
         self.viz.viewer["ee_axis_y"].set_object(g.Box([0.005, 0.1, 0.005]), g.MeshLambertMaterial(color=0x00FF00))
         self.viz.viewer["ee_axis_z"].set_object(g.Box([0.005, 0.005, 0.1]), g.MeshLambertMaterial(color=0x0000FF))
         
-    def visualize(self, robot_state: np.ndarray, ee_frame_name: str = "Fixed_Jaw"):
+    def visualize(self, robot_state: np.ndarray, ee_frame_name: str = "gripper_base"):
         # Visualize robot state
         if robot_state is not None:
             self.viz.display(robot_state)
