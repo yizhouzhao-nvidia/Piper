@@ -568,5 +568,6 @@
       upper="0"
       effort="10"
       velocity="1" />
+    <mimic joint="joint7" multiplier="-1" />
   </joint>
 </robot>

@@ -30,3 +30,4 @@ use your mouse to control the device:
 
 ![ik](./imgs/piper_ik.png)
 
+## Install [CuRobo](https://curobo.org/get_started/1_install_instructions.html) in a new rep
