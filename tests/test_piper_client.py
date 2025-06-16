@@ -1,6 +1,6 @@
 import time
 
-from piper_dev.control_client.piper_client import PiperClient
+from piper.real.control_client.piper_client import PiperClient
 
 if __name__ == "__main__":
     piper_client = PiperClient()

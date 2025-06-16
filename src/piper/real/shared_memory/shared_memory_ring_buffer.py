@@ -6,8 +6,8 @@ import time
 from multiprocessing.managers import SharedMemoryManager
 import numpy as np
 
-from piper_dev.shared_memory.shared_ndarray import SharedNDArray
-from piper_dev.shared_memory.shared_memory_util import ArraySpec, SharedAtomicCounter
+from piper.real.shared_memory.shared_ndarray import SharedNDArray
+from piper.real.shared_memory.shared_memory_util import ArraySpec, SharedAtomicCounter
 
 class SharedMemoryRingBuffer:
     """

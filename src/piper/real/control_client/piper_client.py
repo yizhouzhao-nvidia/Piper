@@ -35,7 +35,7 @@ def enable_fun(piper:C_PiperInterface_V2, enable:bool):
             enable_flag = any(enable_list)
             piper.DisableArm(7)
             piper.GripperCtrl(0,1000,0x02, 0)
-        print(f"使能状态: {enable_flag}")
+        print(f"[PiperClient] Enable state: {enable_flag}")
         print(f"--------------------")
         if(enable_flag == enable):
             loop_flag = True
@@ -45,14 +45,14 @@ def enable_fun(piper:C_PiperInterface_V2, enable:bool):
             enable_flag = False
         # 检查是否超过超时时间
         if elapsed_time > timeout:
-            print(f"超时....")
+            print(f"[PiperClient] Timeout....")
             elapsed_time_flag = True
             enable_flag = False
             loop_flag = True
             break
         time.sleep(0.5)
     resp = enable_flag
-    print(f"Returning response: {resp}")
+    print(f"[PiperClient] Returning response: {resp}")
     return resp
 
 
@@ -88,17 +88,16 @@ class PiperClient(BaseClient):
                 print(f"Connected to Piper with SDK version: {version}")
                 flag = enable_fun(piper=self.piper, enable=True)
                 if(flag == True):
-                    print("使能成功!!!!")
+                    print("[PiperClient] Enable Successful !!!!")
                 else:
                     raise Exception("Failed to enable Piper")
                 
                 # Go to Zero Position             
                 
-                # self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
-                # self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
-                # self.piper.GripperCtrl(0, 1000,0x01, 0) 
-                
-                #self.piper.GripperCtrl(round(0.08 * 1e6), 1000, 0x01, 0)
+                self.piper.MotionCtrl_2(0x01, 0x01, 100, 0x00) # CAN mode, Joint control, speed percent, mit mode (position, speed)
+                self.piper.JointCtrl(0, 0, 0, 0, 0, 0)
+                # self.piper.GripperCtrl(0, 1000, 0x01, 0) 
+                self.piper.GripperCtrl(round(0.02 * 1e6), 1000, 0x01, 0)
                 
             else:
                 raise Exception("Failed to connect to Piper")
@@ -120,7 +119,7 @@ class PiperClient(BaseClient):
                 
                 flag = enable_fun(piper=self.piper, enable=False)
                 if(flag == True):
-                    print("失能成功!!!!")
+                    print("[PiperClient] Disable Successful !!!!")
 
         
                 self.piper.DisconnectPort()

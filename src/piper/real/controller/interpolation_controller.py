@@ -7,11 +7,11 @@ from multiprocessing.managers import SharedMemoryManager
 
 import numpy as np
 
-from piper_dev.control_client import BaseClient
-from piper_dev.shared_memory.shared_memory_queue import Empty, SharedMemoryQueue
-from piper_dev.shared_memory.shared_memory_ring_buffer import SharedMemoryRingBuffer
-from piper_dev.utils.pose_trajectory_interpolator import PoseTrajectoryInterpolator
-from piper_dev.utils.precise_sleep import precise_wait
+from piper.real.control_client import BaseClient
+from piper.real.shared_memory.shared_memory_queue import Empty, SharedMemoryQueue
+from piper.real.shared_memory.shared_memory_ring_buffer import SharedMemoryRingBuffer
+from piper.real.utils.pose_trajectory_interpolator import PoseTrajectoryInterpolator
+from piper.real.utils.precise_sleep import precise_wait
 
 from .base_controller import BaseController
 

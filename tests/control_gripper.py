@@ -3,11 +3,11 @@ import os
 from multiprocessing.managers import SharedMemoryManager
 import numpy as np
 
-from piper_dev.control_client.piper_client import PiperClient
-from piper_dev.controller.interpolation_controller import InterpolationController
-from piper_dev.embodiment.piper import Piper
+from piper.real.control_client.piper_client import PiperClient
+from piper.real.controller.interpolation_controller import InterpolationController
+from piper.real.embodiment.piper import Piper
 
-from piper_dev.utils.precise_sleep import precise_wait
+from piper.real.utils.precise_sleep import precise_wait
 
 from pynput.mouse import Listener
 
