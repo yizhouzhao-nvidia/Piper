@@ -53,18 +53,18 @@ class Robot(Articulation):
         Returns:
             Configuration vector that achieves the target poses.
         """
-        current_gripper_joint_q = self.get_joint_positions()[-1]
         if self.solver is None:
             raise ValueError("Solver is not initialized.")
 
         qt = self.solver(target_pose)
-        # if gripper_command == "open":
-        #     q[-1] = np.clip(current_gripper_joint_q + 0.05, 0, np.pi / 2)
-        # elif gripper_command == "close":
-        #     q[-1] = np.clip(current_gripper_joint_q - 0.05, 0, np.pi / 2)
-        # else:
-        #     q[-1] = current_gripper_joint_q
+        if gripper_command == "open":
+            qt[-2] = np.clip(qt[-2] + 0.01, 0, 0.05)
+            qt[-1] = np.clip(qt[-1] - 0.01, -0.05, 0)
+        elif gripper_command == "close":
+            qt[-2] = np.clip(qt[-2] - 0.01, 0, 0.05)
+            qt[-1] = np.clip(qt[-1] + 0.01, -0.05, 0)
         
+        print("!!!!!!!!!!!!!!!!!!!!!!qt", qt)
 
         # import ipdb; ipdb.set_trace()
         self.update(qt)

@@ -1,6 +1,7 @@
 from .base_preprocessor import PreProcessor
 from scipy.spatial.transform import Rotation as R
 import numpy as np
+from copy import deepcopy
 
 class MousePiperPreProcessor(PreProcessor):
     def __init__(self, move_scale = 0.1, rotate_scale = 50, ee_name: str = "gripper_base"):
@@ -13,7 +14,14 @@ class MousePiperPreProcessor(PreProcessor):
 
     def calibrate(self):
         """input the current """
+        q = deepcopy(self.robot.robot.q0)
+
+        q[1] = np.deg2rad(90)
+        q[2] = np.deg2rad(-45)
+        q[4] = np.deg2rad(-40)
+        self.robot.update(q)
         self.ee_pose = self.robot.get_link_transformations([self.ee_name])[0]
+        self.robot.reset()
 
     def __call__(self, data: np.ndarray | list) -> dict:
         target_pose = np.eye(4)

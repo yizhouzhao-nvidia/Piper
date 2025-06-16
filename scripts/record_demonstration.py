@@ -132,18 +132,27 @@ def main(real: bool = False, fps: int = 10, device: str = "iphone", task: str = 
             # TODO: implement flow control
 
             # ik
+            gripper_command = None
             if not is_resetting:
-                data = control_device.read()[0] 
-                current_position = data[:3, 3]
+                if device == "iphone":
+                    data = control_device.read()[0] 
+                    current_position = data[:3, 3]
+                elif device == "mouse":
+                    data = control_device.read()[0]
+                    current_position = data[:3]
+                    button = control_device.read()[1]
+                    gripper_command = "open" if button[0] == 1 else "close" if button[1] == 1 else "idle"
+                
+                print("!!!!!!!!!!!!!!!!!!!!!!data", data)
+                print("!!!!!!!!!!!!!!!!!!!!!!gripper_command", gripper_command)
                 position_history.append(current_position.tolist())  # Add to position history
                 # update_plot()  # Update the plot with new position
                 
-                # button = control_device.read()[1]
-                # gripper_command = "open" if button[0] == 1 else "close" if button[1] == 1 else "idle"
+
                 target = pre_processor(data)
                 # print("target", target)
         
-                qt = sim_robot.inverse_kinematics(target, None)
+                qt = sim_robot.inverse_kinematics(target, gripper_command)
 
             # visualize
             visualizer.visualize(qt)
