@@ -26,7 +26,7 @@ from piper.teleop.pre_processor.iphone_piper import IphonePiperPreProcessor
 @click.option("--device", type=click.Choice(['mouse', 'iphone']), default="iphone", help="Device type (mouse or iphone)")
 @click.option("--task", type=str, default="test", help="Task name")
 @click.option("--debug", is_flag=True, help="Enable debug mode")
-def main(real: bool = True, fps: int = 10, device: str = "mouse", task: str = "test", debug: bool = False):
+def main(real: bool = False, fps: int = 10, device: str = "iphone", task: str = "test", debug: bool = False):
     # Create figure for 3D plotting
     plt.ion()  # Turn on interactive mode
     fig = plt.figure(figsize=(10, 8))

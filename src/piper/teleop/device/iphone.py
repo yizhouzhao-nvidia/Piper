@@ -189,7 +189,7 @@ class IphoneReader:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stop()
 
-def main(device_only: bool = True):
+def main(device_only: bool = False):
     TEST_DEVICE_ONLY = device_only
     
     # Initialize the figure and 3D axes

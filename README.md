@@ -19,6 +19,11 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
+2. Install Lerobot
+```bash
+uv pip install git+https://github.com/huggingface/lerobot.git
+```
+
 ## Record demonstration
 ```bash
 # under the virutal env
