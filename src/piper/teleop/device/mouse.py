@@ -34,16 +34,17 @@ class MouseReader:
 
     def on_scroll(self, x, y, dx, dy):
         """Track delta scroll (Z-axis)."""
-        self.z += dy / 10  # Scroll up/down maps to Z-axis
+        self.z += dy / 20  # Scroll up/down maps to Z-axis
         # print(f"Scroll delta: Z={self.z}")
 
     def on_click(self, x, y, button, pressed):
         """Detect side button clicks and map them to actions."""
         if pressed:
+            print("button", button)
             if button == mouse.Button.left:  # Side button 1
-                self.roll += 0.1
+                self.roll += 0.05
             elif button == mouse.Button.right:  # Side button 2
-                self.roll -= 0.1
+                self.roll -= 0.05
             elif button == mouse.Button.middle:  # Middle button click
                 if self.next_action == "open":
                     self.buttons[0] = 1
@@ -53,6 +54,10 @@ class MouseReader:
                     self.buttons[1] = 1
                     self.next_action = "open"
                     # print("Action: Close")
+            # elif button == mouse.Button.side:
+            #     self.pitch += 0.05
+            # elif button == mouse.Button.side2:
+            #     self.pitch -= 0.05
         else:
             # idle
             if button == mouse.Button.middle:
@@ -75,4 +80,3 @@ class MouseReader:
         if exc_type is not None:
             print(f"An exception of type {exc_type} occurred: {exc_val}")
             
-

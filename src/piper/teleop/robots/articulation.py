@@ -1,4 +1,3 @@
-import logging
 import os
 from copy import deepcopy
 from typing import Dict, List
@@ -7,8 +6,6 @@ import numpy as np
 import pink
 import pinocchio as pin
 from pink.configuration import get_root_joint_dim
-
-logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.DEBUG)
 
 
 def get_root_dir():

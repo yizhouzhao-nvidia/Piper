@@ -63,8 +63,6 @@ class Robot(Articulation):
         elif gripper_command == "close":
             qt[-2] = np.clip(qt[-2] - 0.01, 0, 0.05)
             qt[-1] = np.clip(qt[-1] + 0.01, -0.05, 0)
-        
-        print("!!!!!!!!!!!!!!!!!!!!!!qt", qt)
 
         # import ipdb; ipdb.set_trace()
         self.update(qt)

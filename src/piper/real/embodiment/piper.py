@@ -3,8 +3,9 @@ from typing import Optional, Callable, Dict, List, Union
 from contextlib import contextmanager
 import numpy as np
 import time
+from .base_embodiment import Embodiment
 
-class Piper:
+class Piper(Embodiment):
     def __init__(self,
                  piper_controller: Optional[BaseController] = None,
                  no_real: bool = False,
@@ -25,7 +26,8 @@ class Piper:
         self.piper_controller.schedule_waypoint(np.array(target_pose), target_time)
         
     def go_to_zero_pose(self):
-        self.piper_controller.schedule_waypoint(np.zeros(7), 3.0 + time.time())
+        self.piper_controller.schedule_waypoint(np.zeros(7), 1.0 + time.time())
+
         
     @contextmanager
     def activate(self):

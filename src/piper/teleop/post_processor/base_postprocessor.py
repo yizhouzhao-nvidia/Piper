@@ -1,6 +1,6 @@
 import abc
 
-from lerobotdemo.robots.robot import Robot
+from piper.teleop.robots.robot import Robot
 
 class PostProcessor(abc.ABC):
     def __init__(self, **kwargs):
